@@ -258,10 +258,10 @@ func (client *RTSPClient) ControlTrack(track string) string {
 }
 
 func (client *RTSPClient) startStream() {
-	fmt.Println("ha ha .")
+	fmt.Println("ha ha ")
 	defer func() {
 		client.Println("Trigger close")
-		client.Signals <- SignalStreamRTPStop
+		// client.Signals <- SignalStreamRTPStop
 	}()
 
 	reconnect := func() error {
@@ -285,6 +285,14 @@ func (client *RTSPClient) startStream() {
 		}
 		client.conn = conn
 		client.connRW = bufio.NewReadWriter(bufio.NewReader(conn), bufio.NewWriter(conn))
+		err = client.request(OPTIONS, nil, client.pURL.String(), false, false)
+		if err != nil {
+			return err
+		}
+		err = client.request(DESCRIBE, map[string]string{"Accept": "application/sdp"}, client.pURL.String(), false, false)
+		if err != nil {
+			return err
+		}
 		//test := map[string]string{"Scale": "1.000000", "Speed": "1.000000", "Range": "clock=20210929T210000Z-20210929T211000Z"}
 		err = client.request(PLAY, nil, client.control, false, false)
 		if err != nil {
@@ -306,7 +314,7 @@ func (client *RTSPClient) startStream() {
 			return
 		}
 
-		if int(time.Since(timer).Seconds()) > 5 {
+		if int(time.Since(timer).Seconds()) > 25 {
 			err := client.request(OPTIONS, map[string]string{"Require": "implicit-play"}, client.control, false, true)
 			if err != nil {
 				client.Println("RTSP Client RTP keep-alive", err)
