@@ -414,10 +414,10 @@ func (client *RTSPClient) startStream() {
 			nb, err := io.ReadFull(client.connRW, header)
 			if err == io.EOF {
 				client.Println("RTSP Client RTP Read Header EOF, attempting to reconnect...")
-				if reconnectErr := reconnect(); reconnectErr != nil {
-					client.Println("RTSP Client RTP Reconnect failed:", reconnectErr)
-					return
-				}
+				//if reconnectErr := reconnect(); reconnectErr != nil {
+				//	client.Println("RTSP Client RTP Reconnect failed:", reconnectErr)
+				//	return
+				//}
 				continue // Try reading again after reconnecting
 			} else if err != nil || nb != 4 {
 				client.Println("RTSP Client RTP Read Header", err)
