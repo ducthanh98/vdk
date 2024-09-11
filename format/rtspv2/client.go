@@ -266,7 +266,7 @@ func (client *RTSPClient) startStream() {
 
 	reconnect := func() error {
 		client.Println("RTSP Client: Reconnecting...")
-		// client.conn.Close() // Close the existing connection
+		client.conn.Close() // Close the existing connection
 		conn, err := net.DialTimeout("tcp", client.pURL.Host, client.options.DialTimeout)
 		if err != nil {
 			return err
