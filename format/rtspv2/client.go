@@ -285,22 +285,14 @@ func (client *RTSPClient) startStream() {
 		}
 		client.conn = conn
 		client.connRW = bufio.NewReadWriter(bufio.NewReader(conn), bufio.NewWriter(conn))
-		err = client.request(OPTIONS, nil, client.pURL.String(), false, false)
-		if err != nil {
-			return err
-		}
-		err = client.request(DESCRIBE, map[string]string{"Accept": "application/sdp"}, client.pURL.String(), false, false)
-		if err != nil {
-			return err
-		}
 
 		err = client.request(OPTIONS, nil, client.pURL.String(), false, false)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		err = client.request(DESCRIBE, map[string]string{"Accept": "application/sdp"}, client.pURL.String(), false, false)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		for _, i2 := range client.mediaSDP {
 			if (i2.AVType != VIDEO && i2.AVType != AUDIO) || (client.options.DisableAudio && i2.AVType == AUDIO) {
@@ -312,7 +304,7 @@ func (client *RTSPClient) startStream() {
 			}
 			err = client.request(SETUP, map[string]string{"Transport": "RTP/AVP/TCP;unicast;interleaved=" + strconv.Itoa(client.chTMP) + "-" + strconv.Itoa(client.chTMP+1)}, client.ControlTrack(i2.Control), false, false)
 			if err != nil {
-				return nil, err
+				return err
 			}
 			if i2.AVType == VIDEO {
 				if i2.Type == av.H264 {
