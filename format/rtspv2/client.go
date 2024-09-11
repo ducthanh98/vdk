@@ -260,7 +260,7 @@ func (client *RTSPClient) ControlTrack(track string) string {
 func (client *RTSPClient) startStream() {
 	defer func() {
 		client.Println("Trigger close")
-		client.Signals <- SignalStreamRTPStop
+		// client.Signals <- SignalStreamRTPStop
 	}()
 
 	reconnect := func() error {
@@ -409,14 +409,12 @@ func (client *RTSPClient) startStream() {
 	header := make([]byte, 4)
 	var fixed bool
 	for {
-		client.Println("Step  1")
 
 		err := client.conn.SetDeadline(time.Now().Add(client.options.ReadWriteTimeout))
 		if err != nil {
 			client.Println("RTSP Client RTP SetDeadline", err)
 			return
 		}
-		client.Println("Step  2")
 
 		if int(time.Since(timer).Seconds()) > 25 {
 			err := client.request(OPTIONS, map[string]string{"Require": "implicit-play"}, client.control, false, true)
@@ -426,7 +424,6 @@ func (client *RTSPClient) startStream() {
 			}
 			timer = time.Now()
 		}
-		client.Println("Step  3")
 
 		if !fixed {
 			nb, err := io.ReadFull(client.connRW, header)
@@ -443,17 +440,14 @@ func (client *RTSPClient) startStream() {
 			}
 		}
 		fixed = false
-		client.Println("Step  4")
 
 		switch header[0] {
 		case 0x24:
-			client.Println("Step  5")
 			length := int32(binary.BigEndian.Uint16(header[2:]))
 			if length > 65535 || length < 12 {
 				client.Println("RTSP Client RTP Incorrect Packet Size")
 				return
 			}
-			client.Println("Step  6")
 
 			content := make([]byte, length+4)
 			content[0] = header[0]
@@ -465,7 +459,6 @@ func (client *RTSPClient) startStream() {
 				client.Println("RTSP Client RTP ReadFull", err)
 				return
 			}
-			client.Println("Step  7")
 
 			//atomic.AddInt64(&client.Bitrate, int64(length+4))
 			if client.options.OutgoingProxy {
@@ -476,13 +469,11 @@ func (client *RTSPClient) startStream() {
 					return
 				}
 			}
-			client.Println("Step  8")
 
 			pkt, got := client.RTPDemuxer(&content)
 			if !got {
 				continue
 			}
-			client.Println("Step  9")
 
 			for _, i2 := range pkt {
 				if len(client.OutgoingPacketQueue) > 2000 {
@@ -491,10 +482,8 @@ func (client *RTSPClient) startStream() {
 				}
 				client.OutgoingPacketQueue <- i2
 			}
-			client.Println("Step  10")
 
 		case 0x52:
-			client.Println("Step  11")
 
 			var responseTmp []byte
 			for {
@@ -503,7 +492,6 @@ func (client *RTSPClient) startStream() {
 					client.Println("RTSP Client RTP Read Keep-Alive Header", rerr)
 					return
 				}
-				client.Println("Step  12")
 
 				responseTmp = append(responseTmp, oneb...)
 				if (len(responseTmp) > 4 && bytes.Compare(responseTmp[len(responseTmp)-4:], []byte("\r\n\r\n")) == 0) || len(responseTmp) > 768 {
@@ -513,7 +501,6 @@ func (client *RTSPClient) startStream() {
 							client.Println("RTSP Client RTP Read Keep-Alive Content-Length", err)
 							return
 						}
-						client.Println("Step  13")
 
 						cont := make([]byte, si)
 						_, err = io.ReadFull(client.connRW, cont)
@@ -521,19 +508,16 @@ func (client *RTSPClient) startStream() {
 							client.Println("RTSP Client RTP Read Keep-Alive ReadFull", err)
 							return
 						}
-						client.Println("Step  14")
 
 					}
 					break
 				}
 			}
-			client.Println("Step  15")
 
 		default:
 			client.Println("RTSP Client RTP Read DeSync")
 			return
 		}
-		client.Println("Step  17")
 
 	}
 
