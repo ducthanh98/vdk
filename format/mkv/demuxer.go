@@ -6,9 +6,9 @@ import (
 	"io"
 	"time"
 
-	"github.com/deepch/vdk/av"
-	"github.com/deepch/vdk/codec/h264parser"
-	"github.com/deepch/vdk/format/mkv/mkvio"
+	"github.com/ducthanh98/vdk/av"
+	"github.com/ducthanh98/vdk/codec/h264parser"
+	"github.com/ducthanh98/vdk/format/mkv/mkvio"
 )
 
 type Demuxer struct {

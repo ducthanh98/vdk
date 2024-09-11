@@ -3,7 +3,7 @@ package mkv
 import (
 	"time"
 
-	"github.com/deepch/vdk/av"
+	"github.com/ducthanh98/vdk/av"
 )
 
 type Stream struct {

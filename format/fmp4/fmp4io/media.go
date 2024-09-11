@@ -3,7 +3,7 @@ package fmp4io
 import (
 	"time"
 
-	"github.com/deepch/vdk/utils/bits/pio"
+	"github.com/ducthanh98/vdk/utils/bits/pio"
 )
 
 const MDIA = Tag(0x6d646961)

@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/deepch/vdk/av"
-	"github.com/deepch/vdk/av/pktque"
+	"github.com/ducthanh98/vdk/av"
+	"github.com/ducthanh98/vdk/av/pktque"
 )
 
 //        time

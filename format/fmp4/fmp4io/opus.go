@@ -1,7 +1,7 @@
 package fmp4io
 
 import (
-	"github.com/deepch/vdk/utils/bits/pio"
+	"github.com/ducthanh98/vdk/utils/bits/pio"
 )
 
 const (
