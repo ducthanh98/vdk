@@ -258,6 +258,7 @@ func (client *RTSPClient) ControlTrack(track string) string {
 }
 
 func (client *RTSPClient) startStream() {
+	fmt.Println("hi hi hi ")
 	defer func() {
 		client.Println("Trigger close")
 		// client.Signals <- SignalStreamRTPStop
