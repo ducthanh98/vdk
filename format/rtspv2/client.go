@@ -413,6 +413,13 @@ func (client *RTSPClient) startStream() {
 		if !fixed {
 			nb, err := io.ReadFull(client.connRW, header)
 			if err == io.EOF {
+				client.Println("Trying to request options...")
+
+				err := client.request(OPTIONS, map[string]string{"Require": "implicit-play"}, client.control, false, true)
+				if err != nil {
+					client.Println("RTSP Client RTP keep-alive", err)
+					return
+				}
 				client.Println("RTSP Client RTP Read Header EOF, attempting to reconnect...")
 				//if reconnectErr := reconnect(); reconnectErr != nil {
 				//	client.Println("RTSP Client RTP Reconnect failed:", reconnectErr)
